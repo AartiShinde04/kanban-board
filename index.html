@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Kanban Board</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
+    <header>
+
+        <h1>Kanban Board</h1>
+
+        <div class="header-actions">
+
+            <button
+                class="theme-btn"
+                id="themeBtn"
+                title="Switch to dark mode"
+            >
+                🌙
+            </button>
+
+            <button id="addTaskBtn">
+                + Add Task
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================
+         MAIN BOARD
+    ====================================== -->
+
+    <main class="board">
+
+
+        <!-- =====================================
+             DASHBOARD STATISTICS
+        ====================================== -->
+
+        <section class="dashboard-stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📋
+                </div>
+
+                <div>
+                    <p>Total Tasks</p>
+                    <h3 id="totalTaskStat">0</h3>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📝
+                </div>
+
+                <div>
+                    <p>To Do</p>
+                    <h3 id="todoStat">0</h3>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⚡
+                </div>
+
+                <div>
+                    <p>In Progress</p>
+                    <h3 id="progressStat">0</h3>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <p>Completed</p>
+                    <h3 id="doneStat">0</h3>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⚠
+                </div>
+
+                <div>
+                    <p>Overdue</p>
+                    <h3 id="overdueStat">0</h3>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             COMPLETION RATE
+        ====================================== -->
+
+        <!-- <section class="completion-section">
+
+            <div class="completion-header">
+
+                <div>
+
+                    <h3>
+                        Completion Rate
+                    </h3>
+
+                    <p>
+                        Overall task progress
+                    </p>
+
+                </div>
+
+                <strong id="completionPercentage">
+                    0%
+                </strong>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    id="completionProgress"
+                ></div>
+
+            </div>
+
+        </section> -->
+
+
+        <!-- =====================================
+             SEARCH AND FILTERS
+        ====================================== -->
+
+        <div class="task-controls">
+
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <span>🔎</span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search tasks..."
+                >
+
+            </div>
+
+
+            <!-- FILTERS -->
+
+            <div class="filter-group">
+
+                <select id="priorityFilter">
+
+                    <option value="all">
+                        All Priorities
+                    </option>
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+
+                </select>
+
+
+                <select id="statusFilter">
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="todo">
+                        To Do
+                    </option>
+
+                    <option value="progress">
+                        In Progress
+                    </option>
+
+                    <option value="done">
+                        Done
+                    </option>
+
+                </select>
+
+
+                <button id="clearFilters">
+                    Clear
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             TO DO COLUMN
+        ====================================== -->
+
+        <section class="column">
+
+            <div class="column-header">
+
+                <h2>
+                    To Do
+                </h2>
+
+                <span id="todoCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                class="task-container"
+                id="todoTasks"
+                data-status="todo"
+            >
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             IN PROGRESS COLUMN
+        ====================================== -->
+
+        <section class="column">
+
+            <div class="column-header">
+
+                <h2>
+                    In Progress
+                </h2>
+
+                <span id="progressCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                class="task-container"
+                id="progressTasks"
+                data-status="progress"
+            >
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             DONE COLUMN
+        ====================================== -->
+
+        <section class="column">
+
+            <div class="column-header">
+
+                <h2>
+                    Done
+                </h2>
+
+                <span id="doneCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                class="task-container"
+                id="doneTasks"
+                data-status="done"
+            >
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================
+         TASK MODAL
+    ====================================== -->
+
+    <div
+        class="modal"
+        id="taskModal"
+    >
+
+        <div class="modal-content">
+
+
+            <!-- MODAL HEADER -->
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">
+                    Add New Task
+                </h2>
+
+
+                <button
+                    id="closeModalBtn"
+                    type="button"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <!-- TASK FORM -->
+
+            <form id="taskForm">
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="taskTitle">
+                        Task Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="taskTitle"
+                        placeholder="Enter task title"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="taskDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="taskDescription"
+                        placeholder="Enter task description"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- PRIORITY -->
+
+                <div class="form-group">
+
+                    <label for="taskPriority">
+                        Priority
+                    </label>
+
+                    <select id="taskPriority">
+
+                        <option value="Low">
+                            Low
+                        </option>
+
+                        <option
+                            value="Medium"
+                            selected
+                        >
+                            Medium
+                        </option>
+
+                        <option value="High">
+                            High
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DUE DATE -->
+
+                <div class="form-group">
+
+                    <label for="taskDueDate">
+                        Due Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="taskDueDate"
+                    >
+
+                </div>
+
+
+                <!-- FORM BUTTONS -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        id="cancelTaskBtn"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="createTaskBtn"
+                    >
+                        Create Task
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
